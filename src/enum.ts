@@ -25,4 +25,6 @@ export const enum TASK_ID {
   COLLECT_ARTICLE,
   /** 浏览文章/课程 */
   VISIT_ARTICLE,
+  /** 绑定手机 */
+  BIND_MOBILE,
 }
