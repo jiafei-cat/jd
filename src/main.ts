@@ -4,7 +4,7 @@ import runTask from './task'
 
 async function main() {
   await initConfig()
-  // await viewPage()
+  await viewPage()
   await runTask()
 }
 

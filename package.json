@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npm-run-all --parallel tsc nodemon",
-    "tsc": "tsc --watch",
+    "dev": "npm-run-all --parallel tsc:watch nodemon",
+    "tsc:watch": "tsc --watch",
+    "tsc": "tsc",
     "nodemon": "nodemon ./dist/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
