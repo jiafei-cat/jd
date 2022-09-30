@@ -8,7 +8,7 @@ global.request = request
 
 const { JUEJIN_COOKIE } = process.env
 
-function initConfig() {
+async function initConfig() {
   consola.start('初始化用户配置...')
   if (!JUEJIN_COOKIE) {
     throw new Error('未配置用户Cookies, 初始化失败!')

@@ -1,11 +1,12 @@
-import initConfig from './task/initConfig'
+import viewPage from './executes/viewPage'
+import initConfig from './executes/initConfig'
 import runTask from './task'
 
-function main() {
-  initConfig()
-  runTask()
+async function main() {
+  await initConfig()
+  // await viewPage()
+  await runTask()
 }
-
 
 try {
   main()
