@@ -6,7 +6,7 @@ name: 掘金日常任务
 on:
   schedule:
     # 书写格式 https://crontab.guru/
-    - cron: "15 9 * * *"
+    - cron: "15 1 * * *"
   push:
     branches: [ "master" ]
   pull_request:
