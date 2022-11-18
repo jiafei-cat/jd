@@ -25,6 +25,9 @@ export interface ITaskItem {
   web_jump_url: string
 }
 
+/**
+ * 获取用户任务列表
+ */
 export default async function getUserTask () {
   return await request.post<never, baseAPIData<ITask>>('/growth_api/v1/user_growth/task_list', {
     growth_type: 1

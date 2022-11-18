@@ -8,7 +8,7 @@ import { randomNumber } from '../../utils'
 export default async function getRandomUser(limit: number) {
   const result = await getRecommendUser()
   if (result.err_no !== 0) {
-    consola.error('获取用户推荐列表失败，任务停止!')
+    consola.error('获取用户推荐列表失败，停止当前任务!')
     return []
   }
 

@@ -8,6 +8,9 @@ global.request = request
 
 const { JUEJIN_COOKIE } = process.env
 
+/**
+ * 初始化方法数据
+ */
 async function initConfig() {
   consola.start('初始化用户配置...')
   if (!JUEJIN_COOKIE) {

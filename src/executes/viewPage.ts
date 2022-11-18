@@ -10,6 +10,9 @@ interface IOptions {
   pins?: number
 }
 
+/**
+ * 浏览页面
+ */
 export default async function viewPage (options?:IOptions) {
   console.log('浏览网页')
   const { article = 1, pins = 1 } = options || { article: 1, pins: 1 }
@@ -18,7 +21,7 @@ export default async function viewPage (options?:IOptions) {
 
   const browser = await initBrowser()
   consola.start('浏览首页')
-  await goPage(browser, 'https://juejin.cn', '.flash-note-lead .icon-close')
+  await goPage(browser, 'https://juejin.cn', '.entry', 3000)
   consola.start('浏览沸点首页')
   await goPage(browser, 'https://juejin.cn/pins', '.pin-action-row .comment-action')
   consola.start('签到')
@@ -42,7 +45,7 @@ export default async function viewPage (options?:IOptions) {
 }
 
 
-async function goPage(browser: Browser, url: string, clickElement?: string) {
+async function goPage(browser: Browser, url: string, clickElement?: string, delayTime?: number) {
   const page = await browser.newPage()
   await page.evaluateOnNewDocument(() => {
     localStorage.setItem('hideExtension', 'true') // 屏蔽插件弹窗
@@ -53,13 +56,29 @@ async function goPage(browser: Browser, url: string, clickElement?: string) {
 
   await page.goto(url, { waitUntil: 'load' })
 
+  delayTime && await delay(delayTime) // 等待网络请求
+
   if (clickElement) {
     const targetList = await page.$$(clickElement)
     if (targetList?.length) {
       await delay(1000)
-      await targetList[0].evaluate((el: any) => el.click())
+      await targetList[0].evaluate((el: any) => {
+        el.click()
+      })
     }
-  
+
+    delayTime && await delay(delayTime) // 等待页面被打开
+
+    const pages = await browser.pages()
+
+    if (pages?.length > 1) {
+      let i = pages.length
+      while (i--) {
+        if (page !== pages[i]) {
+          await pages[i].close()
+        }
+      }
+    }
     await delay(1000)
   }
 

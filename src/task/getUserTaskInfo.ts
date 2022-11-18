@@ -5,6 +5,9 @@ import { supportTaskId } from '../config'
 let isGotUserTask = false
 let preScore = 0
 
+/**
+ * 获取用户任务列表
+ */
 async function getUserTaskInfo() {
   const result = await getUserTask()
   if (result.err_no !== 0) {

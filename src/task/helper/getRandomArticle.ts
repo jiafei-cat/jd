@@ -8,7 +8,7 @@ import { randomNumber } from '../../utils'
 export default async function getRandomArticle(limit: number) {
   const result = await getRecommendArticle()
   if (result.err_no !== 0) {
-    consola.error('获取文章推荐列表失败，任务停止!')
+    consola.error('获取文章推荐列表失败，停止当前任务!')
     return []
   }
   const articleIdList = result.data?.filter(item => item.item_type === 2).map(item => item.item_info.article_id)
