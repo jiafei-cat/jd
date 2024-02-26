@@ -28,8 +28,8 @@ export default async function viewPage (options?:IOptions) {
   await goPage(browser, 'https://juejin.cn/user/center/signin?from=sign_in_menu_bar', '.code-calender .signin') // 签到
   consola.start('抽奖')
   await goPage(browser, 'https://juejin.cn/user/center/lottery?from=sign_in_success', '.text-free') // 抽奖
-  consola.start('沾喜气')
-  await goPage(browser, 'https://juejin.cn/user/center/lottery?from=sign_in_success', '#stick-txt-0') // 沾喜气
+  // consola.start('沾喜气')
+  // await goPage(browser, 'https://juejin.cn/user/center/lottery?from=sign_in_success', '#stick-txt-0') // 沾喜气
   
   consola.start('浏览文章详情')
   for (let i = 0; i < articleList.length; i++) {

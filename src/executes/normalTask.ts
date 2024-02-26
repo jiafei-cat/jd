@@ -13,7 +13,7 @@ import doneDipLucky from '../api/doneDipLucky'
 export default async function normalTask() {
   await signIn() // 签到
   await lotteryFree() // 免费抽奖
-  await dipLucky() // 沾喜气
+  // await dipLucky() // 沾喜气
 }
 
 async function signIn () {
