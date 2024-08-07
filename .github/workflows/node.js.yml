@@ -18,21 +18,25 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [20]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: 'pnpm'
       - name: 安装依赖
-        run: npm ci
+        run: pnpm install
       - name: 转换typescript文件
-        run: npm run build
+        run: pnpm build
       - name: 开始执行任务
         env:
           JUEJIN_COOKIE: ${{ secrets.JUEJIN_COOKIE }}
-        run: node ./dist/main.js
+        run: pnpm ./dist/main.js
