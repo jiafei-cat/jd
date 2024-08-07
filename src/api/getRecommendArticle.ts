@@ -6,12 +6,12 @@ export interface IRecommendItem {
   }
 }
 
-export default async function getRecommendArticle () {
+export default async function getRecommendArticle() {
   return await request.post<never, baseAPIData<IRecommendItem[]>>('/recommend_api/v1/article/recommend_all_feed', {
     id_type: 2,
     client_type: 2608,
     sort_type: 200,
     cursor: '0',
-    limit: 20
+    limit: 20,
   })
 }

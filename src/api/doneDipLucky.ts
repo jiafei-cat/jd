@@ -11,8 +11,8 @@ interface IApi {
 /**
  * 沾喜气
  */
-export default async function doneDipLucky (id: string) {
+export default async function doneDipLucky(id: string) {
   return await request.post<never, baseAPIData<IApi>>('/growth_api/v1/lottery_lucky/dip_lucky', {
-    lottery_history_id: id
+    lottery_history_id: id,
   })
 }

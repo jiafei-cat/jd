@@ -1,6 +1,6 @@
 import consola from 'consola'
 import * as dotenv from 'dotenv'
-import request from '../utils/request'
+import request from '@utils/request'
 
 dotenv.config()
 global.consola = consola
@@ -18,7 +18,7 @@ async function initConfig() {
   }
 
   global.userConfig = {
-    cookies: JUEJIN_COOKIE
+    cookies: JUEJIN_COOKIE,
   }
   consola.success('初始化用户配置成功!')
 }

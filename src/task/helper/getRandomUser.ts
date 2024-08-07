@@ -1,5 +1,5 @@
-import getRecommendUser from '../../api/getRecommendUser'
-import { randomNumber } from '../../utils'
+import getRecommendUser from '@/api/getRecommendUser'
+import { randomNumber } from '@/utils'
 
 /**
  * 获取推荐用户ID
@@ -12,11 +12,11 @@ export default async function getRandomUser(limit: number) {
     return []
   }
 
-  const userIds = result.data?.map(item => item.user_id)
+  const userIds = result.data?.map((item) => item.user_id)
   const length = userIds.length
   const targetIds = new Set<string>()
 
-  while(targetIds.size < limit) {
+  while (targetIds.size < limit) {
     targetIds.add(userIds[randomNumber(length)])
   }
 

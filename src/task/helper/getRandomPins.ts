@@ -1,5 +1,5 @@
-import getRecommendPins from '../../api/getRecommendPins'
-import { randomNumber } from '../../utils'
+import getRecommendPins from '@/api/getRecommendPins'
+import { randomNumber } from '@/utils'
 
 /**
  * 获取推荐文章ID
@@ -12,11 +12,11 @@ export default async function getRandomPins(limit: number) {
     return []
   }
 
-  const articleIdList = result.data?.map(item => item.msg_id)
+  const articleIdList = result.data?.map((item) => item.msg_id)
   const length = articleIdList.length
   const targetIds = new Set<string>()
 
-  while(targetIds.size < limit) {
+  while (targetIds.size < limit) {
     targetIds.add(articleIdList[randomNumber(length)])
   }
 

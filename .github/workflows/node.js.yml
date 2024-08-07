@@ -6,15 +6,14 @@ name: 掘金日常任务
 on:
   schedule:
     # 书写格式 https://crontab.guru/
-    - cron: "50 22 * * *"
+    - cron: '50 22 * * *'
   push:
-    branches: [ "master" ]
+    branches: ['master']
   pull_request:
-    branches: [ "master" ]
+    branches: ['master']
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -23,17 +22,17 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: 安装依赖
-      run: npm ci
-    - name: 转换typescript文件
-      run: npm run tsc
-    - name: 开始执行任务
-      env:
-        JUEJIN_COOKIE: ${{ secrets.JUEJIN_COOKIE }}
-      run: node ./dist/main.js
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: 安装依赖
+        run: npm ci
+      - name: 转换typescript文件
+        run: npm run build
+      - name: 开始执行任务
+        env:
+          JUEJIN_COOKIE: ${{ secrets.JUEJIN_COOKIE }}
+        run: node ./dist/main.js

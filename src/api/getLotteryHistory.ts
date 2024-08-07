@@ -10,9 +10,8 @@ interface IApi {
  *  获取围观大奖
  */
 export default async function getLotteryHistory() {
-  return await request.post<never, baseAPIData<IApi>>('/growth_api/v1/lottery_history/global_big',{
-      page_no: 1,
-      page_size: 5,
-    }
-  )
+  return await request.post<never, baseAPIData<IApi>>('/growth_api/v1/lottery_history/global_big', {
+    page_no: 1,
+    page_size: 5,
+  })
 }

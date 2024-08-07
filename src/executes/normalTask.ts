@@ -1,14 +1,13 @@
-
 import c from 'ansi-colors'
-import getUserSignInStatus from '../api/getUserSignInStatus'
-import doneSignIn from '../api/doneSignIn'
-import getUserLotteryInfo from '../api/getUserLotteryInfo'
-import doneLottery from '../api/doneLottery'
-import getLotteryHistory from '../api/getLotteryHistory'
-import doneDipLucky from '../api/doneDipLucky'
+import getUserSignInStatus from '@/api/getUserSignInStatus'
+import doneSignIn from '@/api/doneSignIn'
+import getUserLotteryInfo from '@/api/getUserLotteryInfo'
+import doneLottery from '@/api/doneLottery'
+import getLotteryHistory from '@/api/getLotteryHistory'
+import doneDipLucky from '@/api/doneDipLucky'
 
 /**
- * 签到/抽奖/沾喜气
+ * 签到/抽奖/沾喜气 (通过调用API完成)
  */
 export default async function normalTask() {
   await signIn() // 签到
@@ -16,7 +15,7 @@ export default async function normalTask() {
   // await dipLucky() // 沾喜气
 }
 
-async function signIn () {
+async function signIn() {
   const result = await getUserSignInStatus()
 
   if (result.err_no !== 0) {
@@ -24,19 +23,23 @@ async function signIn () {
     return
   }
 
-  if(result.data) {
+  if (result.data) {
     consola.warn('当前用户已经签到')
     return
   }
-  
+
   const signInResult = await doneSignIn()
 
   if (signInResult.err_no !== 0) {
-    consola.error(signInResult.err_msg)
+    consola.error(signInResult.err_msg || '签到错误!')
     return
   }
 
-  consola.success(`签到成功, 获得${c.green.bold(String(signInResult.data.incr_point))}积分, 总共${c.green.bold(String(signInResult.data.sum_point))}分。`)
+  consola.success(
+    `签到成功, 获得${c.green.bold(String(signInResult.data.incr_point))}积分, 总共${c.green.bold(
+      String(signInResult.data.sum_point)
+    )}分。`
+  )
 }
 
 async function lotteryFree() {
@@ -86,7 +89,11 @@ async function dipLucky() {
     }
 
     if (dipResult.data.dip_action === 1) {
-      consola.success(`沾喜气成功, 总幸运值为${c.green.bold(String(dipResult.data.total_value))}, 今日获得幸运值${c.green.bold(String(dipResult.data.dip_value))}`)
+      consola.success(
+        `沾喜气成功, 总幸运值为${c.green.bold(String(dipResult.data.total_value))}, 今日获得幸运值${c.green.bold(
+          String(dipResult.data.dip_value)
+        )}`
+      )
     }
   }
 }

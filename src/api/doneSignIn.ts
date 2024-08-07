@@ -1,4 +1,3 @@
-
 interface IApi {
   /** 本次签到获得积分 */
   incr_point: number
@@ -9,6 +8,6 @@ interface IApi {
 /**
  * 用户签到
  */
-export default async function doneSignIn () {
+export default async function doneSignIn() {
   return await request.post<never, baseAPIData<IApi>>('/growth_api/v1/check_in')
 }

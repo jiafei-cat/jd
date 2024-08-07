@@ -1,6 +1,6 @@
 import c from 'ansi-colors'
-import getUserTask, { ITaskItem } from '../api/getUserTask'
-import { supportTaskId } from '../config'
+import getUserTask, { ITaskItem } from '@/api/getUserTask'
+import { supportTaskId } from '@/config'
 
 let isGotUserTask = false
 let preScore = 0
@@ -16,7 +16,7 @@ async function getUserTaskInfo() {
 
   const { today_jscore, growth_tasks } = result?.data
 
-  if(isGotUserTask) {
+  if (isGotUserTask) {
     consola.success(`任务执行完成, 本次任务获得: ${c.green.bold(String(today_jscore - preScore))} 积分`)
     return []
   }
@@ -28,8 +28,14 @@ async function getUserTaskInfo() {
 
   const effectiveTask = Object.keys(growth_tasks)
     .reduce((taskList, key) => taskList.concat(growth_tasks[key]), [] as ITaskItem[])
-    .filter(taskItem => taskItem.done < taskItem.limit && supportTaskId.includes(taskItem.task_id))
-    .map(({ task_id: taskId, title, score, task_type: type, limit, done }) => ({ taskId, title, score, type, time: limit - done}))
+    .filter((taskItem) => taskItem.done < taskItem.limit && supportTaskId.includes(taskItem.task_id))
+    .map(({ task_id: taskId, title, score, task_type: type, limit, done }) => ({
+      taskId,
+      title,
+      score,
+      type,
+      time: limit - done,
+    }))
 
   if (!effectiveTask.length) {
     consola.warn('抱歉, 当前没有可以执行的任务!')
@@ -37,7 +43,9 @@ async function getUserTaskInfo() {
   }
 
   consola.info(`
-    总共${c.red.bold(String(effectiveTask.length))}个任务:${effectiveTask.map(taskItem => `\n    -【${taskItem.type}】${taskItem.title}`).join()}
+    总共${c.red.bold(String(effectiveTask.length))}个任务:${effectiveTask
+    .map((taskItem) => `\n    -【${taskItem.type}】${taskItem.title}`)
+    .join()}
   `)
 
   return effectiveTask

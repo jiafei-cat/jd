@@ -1,11 +1,11 @@
-import initConfig from './executes/initConfig'
-import viewPage from './executes/viewPage'
-import normalTask from './executes/normalTask'
-import dailyTask from './task'
+import initConfig from '@/executes/initConfig'
+import viewPageTask from '@/executes/viewPageTask'
+import normalTask from '@/executes/normalTask'
+import dailyTask from '@/task'
 
 async function main() {
   await initConfig()
-  await viewPage()
+  await viewPageTask()
   await normalTask()
   await dailyTask()
 }

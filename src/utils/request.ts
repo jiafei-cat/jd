@@ -10,7 +10,8 @@ const defaultHeader = {
   'sec-fetch-dest': 'empty',
   'sec-fetch-mode': 'cors',
   'sec-fetch-site': 'same-site',
-  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
+  'User-Agent':
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
 }
 
 const axiosInstance = axios.create({
@@ -18,20 +19,21 @@ const axiosInstance = axios.create({
 })
 
 axiosInstance.interceptors.request.use(
-  config => {
+  (config) => {
     if (config.headers) {
-      config.headers = defaultHeader
+      // @ts-ignore
+      config.headers = { ...config.headers, ...defaultHeader }
       config.headers.cookie = userConfig.cookies
     }
 
     return config
   },
-  error => {
+  (error) => {
     return Promise.reject(error)
   }
 )
 
-axiosInstance.interceptors.response.use(response => {
+axiosInstance.interceptors.response.use((response) => {
   return response.data
 })
 

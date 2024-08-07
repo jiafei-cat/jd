@@ -6,9 +6,4 @@ function randomDelay() {
   return delay(randomNumber(1000, 5000))
 }
 
-export {
-  delay,
-  randomNumber,
-  randomDelay,
-  parseCookiesToJson,
-}
+export { delay, randomNumber, randomDelay, parseCookiesToJson }

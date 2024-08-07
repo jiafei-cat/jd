@@ -1,14 +1,18 @@
 import c from 'ansi-colors'
-import getUserCollectList from '../api/getUserCollectList'
+import getUserCollectList from '@/api/getUserCollectList'
 import getRandomArticle from './helper/getRandomArticle'
-import doneCollectArticle from '../api/doneCollectArticle'
+import doneCollectArticle from '@/api/doneCollectArticle'
 
-import { randomDelay } from '../utils'
+import { randomDelay } from '@/utils'
 
+/**
+ * 随收藏文章
+ * @param time 收藏文章数量
+ */
 async function collectArticle(time: number) {
   const articleIds = await getRandomArticle(time)
   const collectionList = await getUserCollectList(userId)
-  const collectionId = collectionList.data?.find(i => i.is_default)?.collection_id
+  const collectionId = collectionList.data?.find((i) => i.is_default)?.collection_id
 
   if (!collectionId) {
     consola.error('获取用户收藏集失败，停止当前任务!')
@@ -20,7 +24,7 @@ async function collectArticle(time: number) {
   let collectResultArr = []
   let unCollectResultArr = []
 
-  for(let i = 0; i < articleIds.length; i++) {
+  for (let i = 0; i < articleIds.length; i++) {
     consola.log(`开始收藏第${c.red(String(i + 1))}个文章: ${c.yellow.bold(`https://juejin.cn/post/${articleIds[i]}`)}`)
     let followResult = await doneCollectArticle(articleIds[i], collectionId, true)
     collectResultArr.push(followResult)
@@ -32,10 +36,9 @@ async function collectArticle(time: number) {
     unCollectResultArr.push(unFollowResult)
     await randomDelay()
   }
-  
 
-  const collectSuccessNumber = collectResultArr.filter(i => i.err_no === 0)
-  const unCollectSuccessNumber = unCollectResultArr.filter(i => i.err_no === 0)
+  const collectSuccessNumber = collectResultArr.filter((i) => i.err_no === 0)
+  const unCollectSuccessNumber = unCollectResultArr.filter((i) => i.err_no === 0)
 
   consola.success(`
     任务完成, 总共成功收藏 ${c.green.bold(String(collectSuccessNumber.length))} 个文章, 
