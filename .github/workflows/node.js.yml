@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Install pnpm
+      - name: 安装PNPM
         uses: pnpm/action-setup@v4
         with:
           version: 9
@@ -39,4 +39,4 @@ jobs:
       - name: 开始执行任务
         env:
           JUEJIN_COOKIE: ${{ secrets.JUEJIN_COOKIE }}
-        run: pnpm ./dist/main.js
+        run: node ./dist/main.js
