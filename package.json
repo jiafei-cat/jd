@@ -35,7 +35,7 @@
     "consola": "^2.15.3",
     "dotenv": "^16.0.2",
     "npm-run-all": "^4.1.5",
-    "puppeteer": "^18.0.5",
+    "puppeteer": "^23.0.1",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.10",
     "tslib": "^2.4.0",

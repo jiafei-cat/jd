@@ -12,7 +12,7 @@ const initBrowser = async () => {
         // defaultViewport: null,
         // slowMo: 250,
         timeout: 0,
-        ignoreHTTPSErrors: true,
+        // ignoreHTTPSErrors: true,
         ignoreDefaultArgs: ['--enable-automation'],
         args: [
           '--window-size=1920,1080',
