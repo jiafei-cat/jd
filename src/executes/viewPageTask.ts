@@ -25,10 +25,10 @@ export default async function viewPageTask(options?: IOptions) {
   await goPage('https://juejin.cn/pins', '.pin-action-row .comment-action')
 
   consola.start('签到')
-  await goPage('https://juejin.cn/user/center/signin?from=sign_in_menu_bar', '.code-calender .signin')
+  await goPage('https://juejin.cn/user/center/signin?from=main_page', '.code-calender button')
 
   consola.start('抽奖')
-  await goPage('https://juejin.cn/user/center/lottery?from=sign_in_success', '.text-free')
+  await goPage('https://juejin.cn/user/center/lottery?from=sign_in_successz', '.text-free')
 
   const articleList = await getRandomArticle(article)
   consola.start(`随机浏览文章详情，数量 ${article}`)
@@ -59,7 +59,7 @@ async function goPage(url: string, clickElement?: string) {
   await page.goto(url, { waitUntil: 'domcontentloaded' })
 
   await handleClickPageElement(page, clickElement)
-  await handleScrollAndClosePages(page, await browser.pages())
+  await handleScrollAndClosePages(browser)
 }
 
 async function pageInit(page: Page) {
@@ -90,33 +90,45 @@ async function handleClickPageElement(curPage: Page, clickElement?: string) {
   const targetList = await curPage.$$(clickElement)
 
   try {
-    consola.start(`点击目标元素 ${clickElement}`)
-    await targetList[0].evaluate((el: any) => {
-      el.click()
-    })
+    consola.info(`点击目标元素 ${clickElement}`)
+    const [newPageByClick] = await Promise.all([
+      new Promise((resolve) => {
+        browser.off('targetcreated', handle)
+        /** 监听点击后是否有新页面打开 */
+        browser.once('targetcreated', handle)
+
+        function handle(target: any) {
+          resolve(target.page())
+        }
+
+        /** 2s 后如果还没有检测到打开新页面，则不再继续等待 */
+        setTimeout(resolve, 2000)
+      }),
+      targetList[0].evaluate((el: any) => {
+        el.click()
+        return el.innerHTML
+      }),
+    ])
+
     consola.success(`点击元素 ${clickElement} 成功!`)
   } catch (error) {
-    consola.error(`点击元素 ${clickElement} 失败!`)
+    consola.error(`点击元素 ${clickElement} 失败! ${error}`)
     await curPage.close()
     return
   }
 }
 
-async function handleScrollAndClosePages(statePage: Page, pages: Page[]) {
-  if (pages?.length > 1) {
-    let i = pages.length
-    while (i--) {
-      if (statePage !== pages[i]) {
-        await pages[i].close()
-      }
-    }
+async function handleScrollAndClosePages(browser: Browser) {
+  consola.info('滚动页面')
+  const pages = await browser.pages()
+  if (!pages.length) {
+    return
   }
 
-  await delay(1000)
-
-  await statePage.mouse.wheel({ deltaY: 5000 })
-
-  await delay(1000)
-
-  await statePage.close()
+  await pages[pages.length - 1].mouse.wheel({ deltaY: 5000 })
+  consola.info(`当前浏览器页面数量 ${pages.length}`)
+  for (let i = 0; i < pages.length; i++) {
+    await pages[i].close()
+  }
+  consola.info(`关闭所有页面`)
 }

@@ -1,4 +1,7 @@
-import puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer-extra'
+import StealthPlugin from 'puppeteer-extra-plugin-stealth'
+
+puppeteer.use(StealthPlugin())
 
 const initBrowser = async () => {
   if (!global.browser) {
@@ -6,12 +9,13 @@ const initBrowser = async () => {
       global.browser = await puppeteer.launch({
         headless: true,
         devtools: false,
-        defaultViewport: null,
-        slowMo: 250,
+        // defaultViewport: null,
+        // slowMo: 250,
         timeout: 0,
         ignoreHTTPSErrors: true,
         ignoreDefaultArgs: ['--enable-automation'],
         args: [
+          '--window-size=1920,1080',
           '--no-sandbox', // 沙盒模式
           '--disable-setuid-sandbox', // uid沙盒
           '--disable-dev-shm-usage', // 创建临时文件共享内存

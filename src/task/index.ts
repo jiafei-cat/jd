@@ -6,6 +6,7 @@ import starArticle from './starArticle'
 import starPins from './starPins'
 import followUser from './followUser'
 import collectArticle from './collectArticle'
+import getUserInfo from './getUserInfo'
 
 /**
  * 日常任务 (通过获取当前用户的任务列表，调用API完成)
@@ -13,6 +14,7 @@ import collectArticle from './collectArticle'
 async function runTask() {
   consola.start('查询当前用户任务列表')
   const taskList = await getUserTaskInfo()
+  await getUserInfo()
 
   if (!taskList.length) {
     consola.log(`没有需要执行的任务, 任务结束!`)

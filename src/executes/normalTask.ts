@@ -31,7 +31,7 @@ async function signIn() {
   const signInResult = await doneSignIn()
 
   if (signInResult.err_no !== 0) {
-    consola.error(signInResult.err_msg || '签到错误!')
+    consola.error(signInResult.err_msg || `签到错误 ${JSON.stringify(result)}`)
     return
   }
 
@@ -46,7 +46,7 @@ async function lotteryFree() {
   const result = await getUserLotteryInfo()
 
   if (result.err_no !== 0) {
-    consola.error(result.err_msg)
+    consola.error(result.err_msg || `抽奖错误 ${JSON.stringify(result)}`)
     return
   }
 

@@ -35,6 +35,8 @@ async function getUserTaskInfo() {
       score,
       type,
       time: limit - done,
+      done,
+      limit,
     }))
 
   if (!effectiveTask.length) {
@@ -44,7 +46,7 @@ async function getUserTaskInfo() {
 
   consola.info(`
     总共${c.red.bold(String(effectiveTask.length))}个任务:${effectiveTask
-    .map((taskItem) => `\n    -【${taskItem.type}】${taskItem.title}`)
+    .map((taskItem) => `\n    -【${taskItem.type}】${taskItem.title} 完成进度: ${taskItem.done}/${taskItem.limit}`)
     .join()}
   `)
 
