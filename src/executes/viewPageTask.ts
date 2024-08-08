@@ -1,4 +1,4 @@
-import type { Page } from 'puppeteer'
+import type { Page, Browser } from 'puppeteer'
 import { parseCookiesToJson } from '@/utils'
 import initBrowser from '@/browser'
 import { delay } from '@/utils'
@@ -53,16 +53,16 @@ export default async function viewPageTask(options?: IOptions) {
  */
 async function goPage(url: string, clickElement?: string) {
   const browser = await initBrowser()
+  const page = await browser.newPage()
 
-  const page = await pageInit()
+  await pageInit(page)
   await page.goto(url, { waitUntil: 'domcontentloaded' })
 
   await handleClickPageElement(page, clickElement)
   await handleScrollAndClosePages(page, await browser.pages())
 }
 
-async function pageInit() {
-  const page = await browser.newPage()
+async function pageInit(page: Page) {
   await page.evaluateOnNewDocument(() => {
     localStorage.setItem('hideExtension', 'true') // 屏蔽插件弹窗
     localStorage.setItem('isShowFlashNoteLead', 'false') // 屏蔽笔记弹窗
@@ -70,8 +70,6 @@ async function pageInit() {
 
   await page.setCookie(...parseCookiesToJson(global.userConfig.cookies, 'https://api.juejin.cn'))
   await page.setCookie(...parseCookiesToJson(global.userConfig.cookies, 'https://juejin.cn'))
-
-  return page
 }
 
 async function handleClickPageElement(curPage: Page, clickElement?: string) {
