@@ -22,6 +22,10 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+      - run: |
+          echo "ACTIONS_ALLOW_UNSECURE_COMMANDS=true" >> $GITHUB_ENV
+      - run: |
+          echo "GOOGLE_CHROME_PATH=$(which google-chrome)" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - name: 安装PNPM
         uses: pnpm/action-setup@v4

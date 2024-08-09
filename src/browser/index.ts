@@ -12,6 +12,7 @@ const initBrowser = async () => {
         // defaultViewport: null,
         // slowMo: 250,
         timeout: 0,
+        executablePath: process.env.GOOGLE_CHROME_PATH,
         // ignoreHTTPSErrors: true,
         ignoreDefaultArgs: ['--enable-automation'],
         args: [
