@@ -12,6 +12,26 @@ interface IOptions {
   pins?: number
 }
 
+const resolveObj = {
+  resolve: (arg: any) => {},
+}
+
+function handle(target: any) {
+  resolveObj.resolve(target.page())
+}
+
+function awaitNewPageByClick(browser: Browser) {
+  return new Promise((resolve) => {
+    resolveObj.resolve = resolve
+    browser.off('targetcreated', handle)
+    /** 监听点击后是否有新页面打开 */
+    browser.once('targetcreated', handle)
+
+    /** 2s 后如果还没有检测到打开新页面，则不再继续等待 */
+    setTimeout(resolve, 3000)
+  })
+}
+
 /**
  * 模拟浏览页面任务 (非通过API)
  */
@@ -91,25 +111,10 @@ async function handleClickPageElement(curPage: Page, clickElement?: string) {
 
   try {
     consola.info(`点击目标元素 ${clickElement}`)
-    const [newPageByClick] = await Promise.all([
-      new Promise((resolve) => {
-        browser.off('targetcreated', handle)
-        /** 监听点击后是否有新页面打开 */
-        browser.once('targetcreated', handle)
-
-        function handle(target: any) {
-          resolve(target.page())
-        }
-
-        /** 2s 后如果还没有检测到打开新页面，则不再继续等待 */
-        setTimeout(resolve, 2000)
-      }),
-      targetList[0].evaluate((el: any) => {
-        el.click()
-        return el.innerHTML
-      }),
-    ])
-
+    await targetList[0].evaluate((el: any) => {
+      el.click()
+    })
+    const newPageByClick = await awaitNewPageByClick(browser)
     consola.success(`点击元素 ${clickElement} 成功!`)
   } catch (error) {
     consola.error(`点击元素 ${clickElement} 失败! ${error}`)
@@ -119,13 +124,16 @@ async function handleClickPageElement(curPage: Page, clickElement?: string) {
 }
 
 async function handleScrollAndClosePages(browser: Browser) {
-  consola.info('滚动页面')
   const pages = await browser.pages()
+  consola.info(`滚动页面, 当前页面数量 ${pages.length}`)
   if (!pages.length) {
     return
   }
 
+  await delay(1000)
   await pages[pages.length - 1].mouse.wheel({ deltaY: 5000 })
+  await delay(1000)
+
   consola.info(`当前浏览器页面数量 ${pages.length}`)
   for (let i = 0; i < pages.length; i++) {
     await pages[i].close()
