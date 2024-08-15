@@ -4,6 +4,7 @@ import initBrowser from '@/browser'
 import { delay } from '@/utils'
 import getRandomArticle from '@/task/helper/getRandomArticle'
 import getRandomPins from '@/task/helper/getRandomPins'
+import fs from 'fs'
 
 interface IOptions {
   /** 随机浏览文章数量 */
@@ -16,8 +17,10 @@ const resolveObj = {
   resolve: (arg: any) => {},
 }
 
-function handle(target: any) {
-  resolveObj.resolve(target.page())
+async function handle(target: any) {
+  const newPage = await target.page()
+  consola.info(`打开了新页面，新页面标题: ${await newPage?.title()}`)
+  resolveObj.resolve(newPage)
 }
 
 function awaitNewPageByClick(browser: Browser) {
@@ -76,7 +79,7 @@ async function goPage(url: string, clickElement?: string) {
   const page = await browser.newPage()
 
   await pageInit(page)
-  await page.goto(url, { waitUntil: 'domcontentloaded' })
+  await page.goto(url, { waitUntil: 'networkidle0' })
 
   await handleClickPageElement(page, clickElement)
   await handleScrollAndClosePages(browser)
@@ -99,12 +102,15 @@ async function handleClickPageElement(curPage: Page, clickElement?: string) {
 
   console.time('元素加载用时: ')
   try {
-    consola.info('等待nuxt页面加载')
-    await curPage.waitForSelector('#__nuxt:not([data-server-rendered="true"])')
-    consola.success('nuxt页面加载完成')
-
+    // if (waitingSelector) {
+    //   consola.info(`等待自定义元素${waitingSelector}加载`)
+    //   await curPage.waitForSelector(waitingSelector)
+    //   consola.success(`自定义元素${waitingSelector}加载完成`)
+    // }
     await curPage.waitForSelector(clickElement)
-    await curPage.content()
+    /** 用于对比HTML */
+    // const htmlBeforeClick = await curPage.content()
+    // fs.writeFileSync('./htmlBeforeClick.html', htmlBeforeClick)
   } catch (error) {
     console.timeEnd('元素加载用时: ')
     consola.error(`加载不到目标元素 ${clickElement}`)
@@ -113,7 +119,6 @@ async function handleClickPageElement(curPage: Page, clickElement?: string) {
   console.timeEnd('元素加载用时: ')
 
   // const targetList = await curPage.$$(clickElement)
-
   try {
     consola.info(`点击目标元素 ${clickElement}`)
     // const el = await targetList[0].evaluate((el: any) => {
@@ -121,7 +126,10 @@ async function handleClickPageElement(curPage: Page, clickElement?: string) {
     //   return el
     // })
     const el = await curPage.click(clickElement)
+    console.time('等待是否有新页面打开')
     const newPageByClick = await awaitNewPageByClick(browser)
+    console.timeEnd('等待是否有新页面打开')
+
     consola.success(`点击元素 ${clickElement} 成功!`)
   } catch (error) {
     consola.error(`点击元素 ${clickElement} 失败! ${error}`)
