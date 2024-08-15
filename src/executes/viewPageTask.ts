@@ -99,7 +99,12 @@ async function handleClickPageElement(curPage: Page, clickElement?: string) {
 
   console.time('元素加载用时: ')
   try {
+    consola.info('等待nuxt页面加载')
+    await curPage.waitForSelector('#__nuxt:not([data-server-rendered="true"])')
+    consola.success('nuxt页面加载完成')
+
     await curPage.waitForSelector(clickElement)
+    await curPage.content()
   } catch (error) {
     console.timeEnd('元素加载用时: ')
     consola.error(`加载不到目标元素 ${clickElement}`)
@@ -116,9 +121,7 @@ async function handleClickPageElement(curPage: Page, clickElement?: string) {
     //   return el
     // })
     const el = await curPage.click(clickElement)
-    consola.info(el)
     const newPageByClick = await awaitNewPageByClick(browser)
-    consola.info(newPageByClick)
     consola.success(`点击元素 ${clickElement} 成功!`)
   } catch (error) {
     consola.error(`点击元素 ${clickElement} 失败! ${error}`)
